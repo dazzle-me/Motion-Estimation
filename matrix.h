@@ -14,10 +14,18 @@ public:
         size_t height,
         size_t width
     );
-    uint32_t getHeight() const;
-    uint32_t getWidth() const;
+    // ISO CPP tells us that if we define function inside the class, eventually
+    // compiler makes it inline
+    uint32_t getHeight() const  {
+        return this -> _height;
+    };
+    uint32_t getWidth() const {
+        return this -> _width;;
+    };
 
-    int get(size_t h, size_t w) const;
+    int get(size_t h, size_t w) const {
+        return static_cast<int>(_vector[h * getWidth() + w]);
+    };
 private:
     uint32_t _height;
     uint32_t _width;
