@@ -20,12 +20,14 @@ public:
         bool use_halfpixel
     );
     void Estimate(
-        py::array_t<unsigned char> current_frame,
-        py::array_t<unsigned char> previous_frame
+        py::array_t<unsigned char> _current_frame,
+        py::array_t<unsigned char> _previous_frame
     );
-    MotionVector FindBlock(const Matrix& rank_block, unsigned char* previous_frame_ptr);
-    py::array_t<unsigned char> Remap(py::array_t<unsigned char> previous_frame);
-    void AssignBlock(unsigned char* result_ptr, const Matrix& domain_block, size_t h, size_t w);
+    MotionVector FindBlock(const Matrix& previous_frame, const Matrix& current_frame, size_t dh, size_t dw);
+    py::array_t<unsigned char> Remap(py::array_t<unsigned char> _previous_frame);
+    void AssignBlock(unsigned char* result_ptr, size_t dh, size_t dw, MotionVector& motion_vector, Matrix& previous_frame);
+    // ISO CPP tells us that if we define function inside the class, eventually
+    // compiler makes it inline
 private:
     std::vector<MotionVector> storage;
     

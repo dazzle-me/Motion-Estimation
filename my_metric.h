@@ -2,6 +2,10 @@
 
 #include "matrix.h"
 
-// Computes the absolute difference of the given slices
-uint32_t compute_abs_difference(const Matrix& a,
-                                const Matrix& b);
+// Computes the absolute difference between given slices
+int compute_abs_difference(const Matrix& a,
+                            int dh_a,
+                            int dw_a,
+                            const Matrix& b,
+                            int dh_b,
+                            int dw_b);

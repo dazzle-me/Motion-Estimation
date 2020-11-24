@@ -1,12 +1,16 @@
 #include "my_metric.h"
 
-uint32_t compute_abs_difference(const Matrix& a, 
-                                const Matrix& b) 
+int compute_abs_difference(const Matrix& a, 
+                            int dh_a,
+                            int dw_a,
+                            const Matrix& b,
+                            int dh_b,
+                            int dw_b) 
 {
-    uint32_t sum = 0;
-    for (size_t h = 0; h < 16; h++) {
-        for (size_t w = 0; w < 16; w++) {
-            sum += std::abs(a.get(h, w) - b.get(h, w)); 
+    int sum = 0;
+    for (int h = 0; h < 16; h++) {
+        for (int w = 0; w < 16; w++) {
+            sum += std::abs(a.get(h + dh_a, w + dw_a) - b.get(h + dh_b, w + dw_b)); 
         }
     }
     return sum;

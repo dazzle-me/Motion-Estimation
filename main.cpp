@@ -1,6 +1,5 @@
 #include <pybind11/pybind11.h>
 
-#include "MotionVector.h"
 #include "my_motion_estimator.h"
 
 namespace py = pybind11;
@@ -12,8 +11,7 @@ PYBIND11_MODULE(me_estimator, m) {
         .def("Remap", &MotionEstimator::Remap)
         .def("AssignBlock", &MotionEstimator::AssignBlock);
     py::class_<Matrix>(m, "Matrix")
-        .def(py::init<const unsigned char*, size_t, size_t, size_t, size_t>())
-        .def(py::init<const unsigned char*, size_t, size_t, MotionVector>())
+        .def(py::init<unsigned char*, size_t, size_t>())
         .def("getHeight", &Matrix::getHeight)
         .def("getWidth", &Matrix::getWidth)
         .def("get", &Matrix::get);
