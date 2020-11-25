@@ -12,12 +12,11 @@ MotionEstimator::MotionEstimator(
     _block_size(16) {}
 
 
-MotionVector MotionEstimator::FindBlock(const Matrix& previous_frame,
+MotionVector MotionEstimator::FindBlock_BadBruteForce(const Matrix& previous_frame,
                                         const Matrix& current_frame,
                                         size_t dh,
                                         size_t dw)  
 {
-    // Brute-force search
     int error = std::numeric_limits<int>::max();
     size_t found_h = 0, found_w = 0;
     for (int h = 0; h < this -> _height; h += this -> _block_size) {
@@ -31,6 +30,34 @@ MotionVector MotionEstimator::FindBlock(const Matrix& previous_frame,
         }
     }
     return MotionVector(found_h, found_w);
+}
+
+MotionVector MotionEstimator::FindBlock_CrossSearch(const Matrix& previous_frame,
+                                                    const Matrix& current_frame,
+                                                    size_t dh,
+                                                    size_t dw,
+                                                    size_t halfside,
+                                                    size_t shifted_h,
+                                                    size_t shifted_w)
+{
+    if (halfside == 0) {
+        return MotionVector(shifted_h, shifted_w);
+    }
+    int error = std::numeric_limits<int>::max();
+    size_t found_h = 0, found_w = 0;
+    std::vector<std::pair<int, int>> candidates = {{0, 0}, 
+                                            {-halfside, halfside}, {halfside, halfside},
+                                            {-halfside, -halfside}, {halfside, -halfside}};
+    for (const auto&[offset_h, offset_w] : candidates) {
+        int current_error = compute_abs_difference(previous_frame, offset_h + shifted_h, offset_w  + shifted_w, current_frame, dh, dw, halfside << 1);
+        if (current_error < error) {
+            error = current_error;
+            found_h = offset_h;
+            found_w = offset_w;
+        }
+    } 
+    // Reference point stays the same, but offset updates and halfside halfs every iteration.
+    return FindBlock_CrossSearch(previous_frame, current_frame, dh, dw, halfside >> 1, shifted_h + found_h, shifted_w + found_w);
 }
 
 void MotionEstimator::Estimate(py::array_t<unsigned char> _current_frame,
@@ -48,7 +75,8 @@ void MotionEstimator::Estimate(py::array_t<unsigned char> _current_frame,
     Matrix current_frame = Matrix(current_frame_ptr, this -> _height, this -> _width);
     for (size_t h = 0; h < this -> _height; h += this -> _block_size) {
         for (size_t w = 0; w < this -> _width; w += this -> _block_size) {
-            MotionVector move_vector = this -> FindBlock(previous_frame, current_frame, h, w);
+            MotionVector move_vector = this -> FindBlock_BadBruteForce(previous_frame, current_frame, h, w);
+            // MotionVector move_vector = this -> FindBlock_CrossSearch(previous_frame, current_frame, h, w, this -> _cross_search_halfside, h, w);
             this -> storage.emplace_back(move_vector);
         }
     } 
