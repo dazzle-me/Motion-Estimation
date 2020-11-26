@@ -9,7 +9,10 @@ PYBIND11_MODULE(me_estimator, m) {
         .def(py::init<size_t, size_t, size_t, bool>())
         .def("Estimate", &MotionEstimator::Estimate)
         .def("Remap", &MotionEstimator::Remap)
-        .def("AssignBlock", &MotionEstimator::AssignBlock);
+        .def("AssignBlock", &MotionEstimator::AssignBlock)
+        .def("set_SearchMethod", &MotionEstimator::set_SearchMethod)
+        .def("set_CrossSearch_ErrorThreshold", &MotionEstimator::set_CrossSearch_ErrorThreshold)
+        .def("set_CrossSearch_Side", &MotionEstimator::set_CrossSearch_Side);
     py::class_<Matrix>(m, "Matrix")
         .def(py::init<unsigned char*, size_t, size_t>())
         .def("getHeight", &Matrix::getHeight)
