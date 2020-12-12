@@ -18,4 +18,14 @@ PYBIND11_MODULE(me_estimator, m) {
         .def("getHeight", &Matrix::getHeight)
         .def("getWidth", &Matrix::getWidth)
         .def("get", &Matrix::get);
+    py::class_<MotionVector>(m, "MotionVector")
+        .def(py::init<int, int>())
+        .def(py::init<int, int, int>())
+        .def(py::init<const std::vector<MotionVector>&, int>())
+        .def(py::init<int, int, int, int>())
+        .def("getHeight", &MotionVector::getHeight)
+        .def("getWidth", &MotionVector::getWidth)
+        .def("getError", &MotionVector::getError)
+        .def("is_splitted", &MotionVector::is_splitted)
+        .def("getSubvectors", &MotionVector::getSubvectors);
 };
