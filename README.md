@@ -6,7 +6,7 @@ Here is the result of algorithm execution,
 
 on the top - original video sequence, 
 
-on the bottom - every ```i-th``` frame was derived as some reconstruction from the ```(i - 1)-th``` frame. 
+on the bottom - every ```i-th``` frame was derived as some reconstruction from the ```(i - 1)-th``` frame from the original video. 
 
 ![](motion_estimation.gif)
 
